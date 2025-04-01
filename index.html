@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laundry Biolink Maker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f4f4f9;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto;
+      display: flex;
+      gap: 20px;
+    }
+    .input-section, .preview-section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .input-section {
+      flex: 1;
+    }
+    .preview-section {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .preview-section img {
+      max-width: 100px;
+      margin: 0 auto;
+      display: block;
+    }
+    .preview-section h1, .preview-section p {
+      text-align: center;
+    }
+    .preview-section a {
+      display: block;
+      text-align: center;
+      margin: 10px 0;
+      color: #007bff;
+      text-decoration: none;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Laundry Biolink Maker</h1>
+  <div class="container">
+    <!-- Input Section -->
+    <div class="input-section">
+      <h2>Input Details</h2>
+      <form id="biolinkForm">
+        <label>Logo URL:</label>
+        <input type="text" id="logoUrl" placeholder="https://example.com/logo.png"><br>
+
+        <label>Laundry Name:</label>
+        <input type="text" id="laundryName" placeholder="Bandar Laundry"><br>
+
+        <label>Phone Number:</label>
+        <input type="text" id="phoneNumber" placeholder="085773009666"><br>
+
+        <label>Address:</label>
+        <input type="text" id="address" placeholder="Jl. Pejagalan Kulon No. 50 Sokaraja"><br>
+
+        <label>Price:</label>
+        <input type="text" id="price" placeholder="Rp 6000"><br>
+
+        <label>Area:</label>
+        <input type="text" id="area" placeholder="Sokaraja, Kalibagor, Purwokerto"><br>
+
+        <label>Service:</label>
+        <input type="text" id="service" placeholder="Laundry Kiloan dan Satuan"><br>
+
+        <label>Background Color:</label>
+        <input type="color" id="bgColor" value="#ffffff"><br>
+
+        <label>Background Image URL (optional):</label>
+        <input type="text" id="bgImage" placeholder="https://example.com/background.jpg"><br>
+
+        <label>Additional Links (one per line):</label>
+        <textarea id="additionalLinks" placeholder="Facebook\nInstagram"></textarea><br>
+
+        <button type="button" onclick="generateBiolink()">Generate Biolink</button>
+      </form>
+    </div>
+
+    <!-- Preview Section -->
+    <div class="preview-section" id="previewSection">
+      <h1 id="previewName">Laundry Name</h1>
+      <img id="previewLogo" src="" alt="Laundry Logo">
+      <p id="previewDescription">Description will appear here.</p>
+      <a id="previewFixedLink" href="#">WhatsApp Link</a>
+      <div id="previewLinks"></div>
+      <textarea id="codeOutput" readonly></textarea>
+    </div>
+  </div>
+
+  <script>
+    function generateBiolink() {
+      // Get input values
+      const logoUrl = document.getElementById('logoUrl').value;
+      const laundryName = document.getElementById('laundryName').value;
+      const phoneNumber = document.getElementById('phoneNumber').value;
+      const address = document.getElementById('address').value;
+      const price = document.getElementById('price').value;
+      const area = document.getElementById('area').value;
+      const service = document.getElementById('service').value;
+      const bgColor = document.getElementById('bgColor').value;
+      const bgImage = document.getElementById('bgImage').value;
+      const additionalLinks = document.getElementById('additionalLinks').value.split('\n');
+
+      // Update preview section
+      document.getElementById('previewLogo').src = logoUrl || 'https://via.placeholder.com/100';
+      document.getElementById('previewName').innerText = laundryName || 'Laundry Name';
+      document.getElementById('previewDescription').innerText = `Kami adalah jasa ${service} di ${area}. Harga bersahabat hanya ${price} bisa antar jemput atau datang langsung ke ${address}. Hubungi ${phoneNumber} untuk keterangan lebih lanjut.`;
+      document.getElementById('previewFixedLink').href = `https://wa.me/${phoneNumber.replace(/\D/g, '')}`;
+      document.getElementById('previewFixedLink').innerText = `Hubungi via WhatsApp`;
+
+      // Add additional links
+      const linksContainer = document.getElementById('previewLinks');
+      linksContainer.innerHTML = '';
+      additionalLinks.forEach(link => {
+        if (link.trim()) {
+          const linkElement = document.createElement('a');
+          linkElement.href = link.trim();
+          linkElement.innerText = link.trim();
+          linkElement.style.display = 'block';
+          linkElement.style.margin = '5px 0';
+          linksContainer.appendChild(linkElement);
+        }
+      });
+
+      // Update background
+      const previewSection = document.getElementById('previewSection');
+      previewSection.style.backgroundColor = bgColor;
+      if (bgImage) {
+        previewSection.style.backgroundImage = `url(${bgImage})`;
+        previewSection.style.backgroundSize = 'cover';
+        previewSection.style.backgroundPosition = 'center';
+      } else {
+        previewSection.style.backgroundImage = 'none';
+      }
+
+      // Generate HTML code
+      const codeOutput = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${phoneNumber} Laundry (${service}) Di ${area}</title>
+          <meta name="description" content="Hubungi ${phoneNumber} untuk antar jemput laundry di area ${area}">
+          <meta property="og:title" content="${phoneNumber} Laundry (${service}) Di ${area}">
+          <meta property="og:description" content="Hubungi ${phoneNumber} untuk antar jemput laundry di area ${area}">
+          <meta property="og:image" content="${logoUrl}">
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              text-align: center;
+              background-color: ${bgColor};
+              ${bgImage ? `background-image: url(${bgImage}); background-size: cover; background-position: center;` : ''}
+            }
+            img {
+              max-width: 100px;
+              margin: 20px auto;
+              display: block;
+            }
+            a {
+              display: block;
+              margin: 10px 0;
+              color: #007bff;
+              text-decoration: none;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>${laundryName}</h1>
+          <img src="${logoUrl}" alt="Laundry Logo">
+          <p>Kami adalah jasa ${service} di ${area}. Harga bersahabat hanya ${price} bisa antar jemput atau datang langsung ke ${address}. Hubungi ${phoneNumber} untuk keterangan lebih lanjut.</p>
+          <a href="https://wa.me/${phoneNumber.replace(/\D/g, '')}">Hubungi via WhatsApp</a>
+          ${additionalLinks.map(link => `<a href="${link.trim()}">${link.trim()}</a>`).join('')}
+        </body>
+        </html>
+      `;
+      document.getElementById('codeOutput').value = codeOutput.trim();
+    }
+  </script>
+</body>
+</html>
