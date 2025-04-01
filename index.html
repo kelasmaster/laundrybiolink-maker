@@ -34,14 +34,22 @@
       flex: 1;
       position: relative;
       overflow: hidden;
+      text-align: center;
     }
     .preview-section img {
-      max-width: 100px;
-      margin: 0 auto;
+      max-width: 150px;
+      margin: 20px auto;
       display: block;
+      border-radius: 8px;
     }
-    .preview-section h1, .preview-section p {
-      text-align: center;
+    .preview-section h1 {
+      margin: 10px 0;
+      font-size: 24px;
+    }
+    .preview-section p {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #333;
     }
     .preview-section button {
       display: block;
@@ -53,13 +61,7 @@
       border-radius: 5px;
       cursor: pointer;
       text-decoration: none;
-    }
-    .preview-section a {
-      display: block;
-      text-align: center;
-      margin: 10px 0;
-      color: #007bff;
-      text-decoration: none;
+      font-size: 16px;
     }
     textarea {
       width: 100%;
@@ -98,8 +100,8 @@
         <label>Logo URL:</label>
         <input type="text" id="logoUrl" placeholder="https://example.com/logo.png"><br>
 
-        <label>Laundry Name:</label>
-        <input type="text" id="laundryName" placeholder="Bandar Laundry"><br>
+        <label>Title:</label>
+        <input type="text" id="title" placeholder="Bandar Laundry"><br>
 
         <label>Phone Number:</label>
         <input type="text" id="phoneNumber" placeholder="085773009666"><br>
@@ -122,8 +124,8 @@
         <label>Background Image URL (optional):</label>
         <input type="text" id="bgImage" placeholder="https://example.com/background.jpg"><br>
 
-        <label>Additional Links (Title | URL, one per line):</label>
-        <textarea id="additionalLinks" placeholder="Facebook | https://facebook.com\nInstagram | https://instagram.com"></textarea><br>
+        <label>Additional Buttons (Title | URL, one per line):</label>
+        <textarea id="additionalButtons" placeholder="Facebook | https://facebook.com\nInstagram | https://instagram.com"></textarea><br>
 
         <button type="button" onclick="generateBiolink()">Generate Biolink</button>
       </form>
@@ -131,11 +133,11 @@
 
     <!-- Preview Section -->
     <div class="preview-section" id="previewSection">
-      <h1 id="previewName">Laundry Name</h1>
       <img id="previewLogo" src="" alt="Laundry Logo">
+      <h1 id="previewTitle">Laundry Title</h1>
       <p id="previewDescription">Description will appear here.</p>
       <button id="previewWhatsappButton">WhatsApp</button>
-      <div id="previewLinks"></div>
+      <div id="previewButtons"></div>
     </div>
   </div>
 
@@ -150,7 +152,7 @@
     function generateBiolink() {
       // Get input values
       const logoUrl = document.getElementById('logoUrl').value;
-      const laundryName = document.getElementById('laundryName').value;
+      const title = document.getElementById('title').value;
       const phoneNumber = document.getElementById('phoneNumber').value;
       const address = document.getElementById('address').value;
       const price = document.getElementById('price').value;
@@ -158,28 +160,28 @@
       const service = document.getElementById('service').value;
       const bgColor = document.getElementById('bgColor').value;
       const bgImage = document.getElementById('bgImage').value;
-      const additionalLinks = document.getElementById('additionalLinks').value.split('\n');
+      const additionalButtons = document.getElementById('additionalButtons').value.split('\n');
 
       // Update preview section
-      document.getElementById('previewLogo').src = logoUrl || 'https://via.placeholder.com/100';
-      document.getElementById('previewName').innerText = laundryName || 'Laundry Name';
+      document.getElementById('previewLogo').src = logoUrl || 'https://via.placeholder.com/150';
+      document.getElementById('previewTitle').innerText = title || 'Laundry Title';
       document.getElementById('previewDescription').innerText = `Kami adalah jasa ${service} di ${area}. Harga bersahabat hanya ${price} bisa antar jemput atau datang langsung ke ${address}. Hubungi ${phoneNumber} untuk keterangan lebih lanjut.`;
       document.getElementById('previewWhatsappButton').onclick = () => window.open(`https://wa.me/${phoneNumber.replace(/\D/g, '')}`, '_blank');
       document.getElementById('previewWhatsappButton').innerText = `WhatsApp`;
 
-      // Add additional links
-      const linksContainer = document.getElementById('previewLinks');
-      linksContainer.innerHTML = '';
-      additionalLinks.forEach(link => {
-        if (link.trim()) {
-          const [title, url] = link.split('|').map(part => part.trim());
-          if (title && url) {
-            const linkElement = document.createElement('a');
-            linkElement.href = url;
-            linkElement.innerText = title;
-            linkElement.style.display = 'block';
-            linkElement.style.margin = '5px 0';
-            linksContainer.appendChild(linkElement);
+      // Add additional buttons
+      const buttonsContainer = document.getElementById('previewButtons');
+      buttonsContainer.innerHTML = '';
+      additionalButtons.forEach(button => {
+        if (button.trim()) {
+          const [buttonTitle, buttonUrl] = button.split('|').map(part => part.trim());
+          if (buttonTitle && buttonUrl) {
+            const buttonElement = document.createElement('button');
+            buttonElement.onclick = () => window.open(buttonUrl, '_blank');
+            buttonElement.innerText = buttonTitle;
+            buttonElement.style.display = 'block';
+            buttonElement.style.margin = '10px auto';
+            buttonsContainer.appendChild(buttonElement);
           }
         }
       });
@@ -215,11 +217,21 @@
               ${bgImage ? `background-image: url(${bgImage}); background-size: cover; background-position: center;` : ''}
             }
             img {
-              max-width: 100px;
+              max-width: 150px;
               margin: 20px auto;
               display: block;
+              border-radius: 8px;
             }
-            button, a {
+            h1 {
+              margin: 10px 0;
+              font-size: 24px;
+            }
+            p {
+              margin: 10px 0;
+              font-size: 14px;
+              color: #333;
+            }
+            button {
               display: block;
               margin: 10px auto;
               padding: 10px 20px;
@@ -227,22 +239,20 @@
               color: white;
               border: none;
               border-radius: 5px;
+              cursor: pointer;
               text-decoration: none;
-              text-align: center;
-            }
-            a {
-              background-color: #007bff;
+              font-size: 16px;
             }
           </style>
         </head>
         <body>
-          <h1>${laundryName}</h1>
           <img src="${logoUrl}" alt="Laundry Logo">
+          <h1>${title}</h1>
           <p>Kami adalah jasa ${service} di ${area}. Harga bersahabat hanya ${price} bisa antar jemput atau datang langsung ke ${address}. Hubungi ${phoneNumber} untuk keterangan lebih lanjut.</p>
           <button onclick="window.open('https://wa.me/${phoneNumber.replace(/\D/g, '')}', '_blank')">WhatsApp</button>
-          ${additionalLinks.map(link => {
-            const [title, url] = link.split('|').map(part => part.trim());
-            return title && url ? `<a href="${url}">${title}</a>` : '';
+          ${additionalButtons.map(button => {
+            const [buttonTitle, buttonUrl] = button.split('|').map(part => part.trim());
+            return buttonTitle && buttonUrl ? `<button onclick="window.open('${buttonUrl}', '_blank')">${buttonTitle}</button>` : '';
           }).join('')}
         </body>
         </html>
